@@ -17,7 +17,7 @@ public class Collectables : MonoBehaviour
         }
         if (itemType == ItemType.Health) 
         {
-            Debug.Log("I'm a coin!");
+            Debug.Log("I'm a health!");
         }   
         else 
         {
