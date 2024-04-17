@@ -40,7 +40,10 @@ public class Collectables : MonoBehaviour
                 .GetComponent<NewPlayer>() finds a component called NewPlayer which is the script in this case 
                 .coinsCollected accesses coinsCollected variable
             */
-            GameObject.Find("Player").GetComponent<NewPlayer>().coinsCollected++;
+            GameObject.Find("Player").GetComponent<NewPlayer>().coinsCollected += 1;
+            //Update UI
+            //Have to find player first and access the script to be able to call updateui function.
+            GameObject.Find("Player").GetComponent<NewPlayer>().UpdateUI();
             Destroy(gameObject, 0f);
         }
     }
