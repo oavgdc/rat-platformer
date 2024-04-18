@@ -11,14 +11,20 @@ public class NewPlayer : PhysicsObject
     [SerializeField] private float jumpPower = 10;
 
     public int coinsCollected = 0;
-    public int health = 100;
+
+    public int health = 6;
+    public Image[] hearts;
 
     public Text coinsText;
 
     // Start is called before the first frame update
     void Start()
     {
-        coinsText = GameObject.Find("Coins").GetComponent<Text>();
+        //Note: since coinsText UI element is only every gonna be used one time, we can just assign reference
+        //in unity inspector by dragging and dropping onto text field (in other words, below line is unnecessary)
+        //below line would be good for multiple objects referencing the same thing 
+
+        //coinsText = GameObject.Find("Coins").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -37,6 +43,7 @@ public class NewPlayer : PhysicsObject
     public void UpdateUI() 
     {
         coinsText.text = coinsCollected.ToString() + " Coins";
+
     } 
 
 }
