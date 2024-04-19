@@ -254,12 +254,15 @@ MonoBehaviour:
   maxSpeed: 6
   jumpPower: 12
   coinsCollected: 0
-  health: 100
+  coinsText: {fileID: 1876350939}
+  health: 3
   hearts:
   - {fileID: 1169469871}
   - {fileID: 2007607556}
   - {fileID: 894420734}
-  coinsText: {fileID: 1876350939}
+  heartFull: {fileID: 21300000, guid: 511aaf20b75a79f439a6d1106c94b300, type: 3}
+  heartHalf: {fileID: 21300000, guid: ca054d1223bbdcc45adea412fdcede5e, type: 3}
+  heartEmpty: {fileID: 21300000, guid: 3e8c1a4a32ba46e49936633f48ce31c9, type: 3}
 --- !u!70 &9135174
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
