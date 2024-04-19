@@ -24,6 +24,7 @@ public class NewPlayer : PhysicsObject
     // Start is called before the first frame update
     void Start()
     {
+        health = 3f;
         UpdateUI();
         //Note: since coinsText UI element is only every gonna be used one time, we can just assign reference
         //in unity inspector by dragging and dropping onto text field (in other words, below line is unnecessary)
@@ -47,7 +48,10 @@ public class NewPlayer : PhysicsObject
     //Update UI elements
     public void UpdateUI() 
     {
+        //Update Coins
         coinsText.text = coinsCollected.ToString() + " Coins";
+
+        //Update Health
         for (int i = 0; i < hearts.Length; i++) 
         {
             if (health >= i + 1)

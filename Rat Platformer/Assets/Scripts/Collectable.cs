@@ -16,6 +16,7 @@ public class Collectables : MonoBehaviour
     {
         //Make sure to put for every collectables script, since we want newPlayer to be referenced by every collectables type
         newPlayer = GameObject.Find("Player").GetComponent<NewPlayer>();
+
     }
 
     // Update is called once per frame
@@ -29,8 +30,23 @@ public class Collectables : MonoBehaviour
         //If the player is touching the gameObject that has this script, deactivate that gameObject 
         if (collision.gameObject.name == "Player") 
         {
-
-            newPlayer.coinsCollected++;
+            if (itemType == ItemType.Coin)
+            {
+                newPlayer.coinsCollected++;
+            }
+            else if (itemType == ItemType.Health && newPlayer.health == 2.5f)
+            {
+                newPlayer.health += 0.5f;
+            }
+            else if (itemType == ItemType.Health && newPlayer.health < 3.0f)
+            {
+                newPlayer.health += 1.0f;
+            }
+            else 
+            { 
+            
+            }
+            
             newPlayer.UpdateUI();
             Destroy(gameObject, 0f);
         }
