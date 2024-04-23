@@ -26,6 +26,7 @@ public class NewPlayer : PhysicsObject
     public Dictionary<string, Sprite> inventory = new Dictionary<string, Sprite>();
     public Image inventoryItemImage;
     public Sprite keySprite;
+    public Sprite inventoryItemBlank;
 
     //Inventory (Weapon)
 
@@ -34,8 +35,6 @@ public class NewPlayer : PhysicsObject
     {
         health = 3f;
         UpdateUI();
-
-        AddInventoryItem("key1", keySprite);
 
         //Note: since coinsText UI element is only every gonna be used one time, we can just assign reference
         //in unity inspector by dragging and dropping onto text field (in other words, below line is unnecessary)
@@ -89,6 +88,13 @@ public class NewPlayer : PhysicsObject
     {
         inventory.Add(inventoryItemName, image);
         inventoryItemImage.sprite = inventory[inventoryItemName];
+
+    }
+
+    public void RemoveInventoryItem(string inventoryItemName)
+    {
+        inventory.Remove(inventoryItemName);
+        inventoryItemImage.sprite = inventoryItemBlank;
 
     }
 

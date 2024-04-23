@@ -5,11 +5,13 @@ using UnityEngine;
 public class Collectables : MonoBehaviour
 {
 
-    enum ItemType { Coin, Health }; //Creates an ItemType enum (enum is short for enumeration; it's basically a dropdown)
+    enum ItemType { Coin, Health, InventoryItem }; //Creates an ItemType enum (enum is short for enumeration; it's basically a dropdown)
     [SerializeField] private ItemType itemType;
 
     //Reducing redundancy by creating reference to player
     NewPlayer newPlayer;
+    [SerializeField] private string inventoryStringName;
+    [SerializeField] private Sprite inventorySprite;
 
     // Start is called before the first frame update
     void Start()
@@ -42,9 +44,9 @@ public class Collectables : MonoBehaviour
             {
                 newPlayer.health += 1.0f;
             }
-            else 
+            else if (itemType == ItemType.InventoryItem)
             { 
-            
+                newPlayer.AddInventoryItem(inventoryStringName, inventorySprite);
             }
             
             newPlayer.UpdateUI();
