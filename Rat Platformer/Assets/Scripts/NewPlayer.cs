@@ -7,25 +7,36 @@ using TMPro;
 public class NewPlayer : PhysicsObject
 {
 
+    //Movement
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float jumpPower = 10;
-
-    public int coinsCollected = 0;
-    public Text coinsText;
-
+    
+    //Health
     public float health = 3f;
     public Image[] hearts;
     [SerializeField] public Sprite heartFull;
     [SerializeField] public Sprite heartHalf;
     [SerializeField] public Sprite heartEmpty;
-
     
+    //Coins
+    public int coinsCollected = 0;
+    public Text coinsText;
+
+    //Inventory (Item)
+    public Dictionary<string, Sprite> inventory = new Dictionary<string, Sprite>();
+    public Image inventoryItemImage;
+    public Sprite keySprite;
+
+    //Inventory (Weapon)
 
     // Start is called before the first frame update
     void Start()
     {
         health = 3f;
         UpdateUI();
+
+        AddInventoryItem("key1", keySprite);
+
         //Note: since coinsText UI element is only every gonna be used one time, we can just assign reference
         //in unity inspector by dragging and dropping onto text field (in other words, below line is unnecessary)
         //below line would be good for multiple objects referencing the same thing 
@@ -68,6 +79,17 @@ public class NewPlayer : PhysicsObject
             }
         
         }
+
+        //Update Inventory
+        
+
     } 
+
+    public void AddInventoryItem(string inventoryItemName, Sprite image)
+    {
+        inventory.Add(inventoryItemName, image);
+        inventoryItemImage.sprite = inventory[inventoryItemName];
+
+    }
 
 }
