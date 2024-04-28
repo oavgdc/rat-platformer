@@ -9,15 +9,12 @@ public class Collectables : MonoBehaviour
     [SerializeField] private ItemType itemType;
 
     //Reducing redundancy by creating reference to player
-    NewPlayer newPlayer;
     [SerializeField] private string inventoryStringName;
     [SerializeField] private Sprite inventorySprite;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Make sure to put for every collectables script, since we want newPlayer to be referenced by every collectables type
-        newPlayer = GameObject.Find("Player").GetComponent<NewPlayer>();
 
     }
 
@@ -30,26 +27,26 @@ public class Collectables : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If the player is touching the gameObject that has this script, deactivate that gameObject 
-        if (collision.gameObject.name == "Player") 
+        if (collision.gameObject == NewPlayer.Instance.gameObject) 
         {
             if (itemType == ItemType.Coin)
             {
-                newPlayer.coinsCollected++;
+                NewPlayer.Instance.coinsCollected++;
             }
-            else if (itemType == ItemType.Health && newPlayer.health == 2.5f)
+            else if (itemType == ItemType.Health && NewPlayer.Instance.health == 2.5f)
             {
-                newPlayer.health += 0.5f;
+                NewPlayer.Instance.health += 0.5f;
             }
-            else if (itemType == ItemType.Health && newPlayer.health < 3.0f)
+            else if (itemType == ItemType.Health && NewPlayer.Instance.health < 3.0f)
             {
-                newPlayer.health += 1.0f;
+                NewPlayer.Instance.health += 1.0f;
             }
             else if (itemType == ItemType.InventoryItem)
             { 
-                newPlayer.AddInventoryItem(inventoryStringName, inventorySprite);
+                NewPlayer.Instance.AddInventoryItem(inventoryStringName, inventorySprite);
             }
             
-            newPlayer.UpdateUI();
+            NewPlayer.Instance.UpdateUI();
             Destroy(gameObject, 0f);
         }
     }

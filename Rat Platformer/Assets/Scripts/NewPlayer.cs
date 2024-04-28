@@ -28,6 +28,17 @@ public class NewPlayer : PhysicsObject
     public Sprite keySprite;
     public Sprite inventoryItemBlank;
 
+    //Singleton instantiation (so we don't have to write GameObject.GetComponent
+    private static NewPlayer instance;
+    public static NewPlayer Instance 
+    { 
+        get
+        {
+            if(instance == null) instance = GameObject.FindObjectOfType<NewPlayer>();
+            return instance;
+        }
+    }
+
     //Inventory (Weapon)
 
     // Start is called before the first frame update

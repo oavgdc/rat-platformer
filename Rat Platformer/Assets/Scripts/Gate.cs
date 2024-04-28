@@ -20,11 +20,11 @@ public class Gate : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject == NewPlayer.Instance.gameObject)
         {
-            if (GameObject.Find("Player").GetComponent<NewPlayer>().inventory.ContainsKey(requiredInventoryItemName))
+            if (NewPlayer.Instance.inventory.ContainsKey(requiredInventoryItemName))
             {
-                GameObject.Find("Player").GetComponent<NewPlayer>().RemoveInventoryItem(requiredInventoryItemName);
+                NewPlayer.Instance.RemoveInventoryItem(requiredInventoryItemName);
                 Destroy(gameObject);
             }
         }
