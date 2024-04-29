@@ -57,6 +57,15 @@ public class Enemy : PhysicsObject
         {
             direction = 1;
         } 
+    }
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if(col.gameObject == NewPlayer.Instance.gameObject)
+        {
+            Debug.Log("yipes!");
+            NewPlayer.Instance.health -= 1.0f;
+            NewPlayer.Instance.UpdateUI();
+        }
     }
 }
