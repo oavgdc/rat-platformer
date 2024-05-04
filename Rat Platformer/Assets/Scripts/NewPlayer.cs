@@ -64,6 +64,16 @@ public class NewPlayer : PhysicsObject
             velocity.y = jumpPower;
         }
 
+        //Flip Player
+        if(targetVelocity.x < -0.1)
+        {
+            transform.localScale = new Vector2(-1, 1);
+        } 
+        else if (targetVelocity.x > 0.1)
+        {
+            transform.localScale = new Vector2(1, 1);
+        }
+
     }
 
     //Update UI elements

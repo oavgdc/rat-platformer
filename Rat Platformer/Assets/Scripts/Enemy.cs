@@ -14,6 +14,11 @@ public class Enemy : PhysicsObject
     [SerializeField] private LayerMask rayCastLayerMask;
     [SerializeField] private Vector2 rayCastOffset;
     [SerializeField] private float rayCastLength = 2.0f;
+    
+    //Enemy Health
+    private int health = 100;
+    private int maxHealth = 100;
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +37,7 @@ public class Enemy : PhysicsObject
         if(rightLedgeRaycastHit.collider == null)
         {
             direction = -1;
+            
         } 
 
         //Check for Left Ledge
@@ -57,11 +63,24 @@ public class Enemy : PhysicsObject
         {
             direction = 1;
         } 
+
+        //flip for facing directions
+        
+
+        if(targetVelocity.x < -0.1)
+        {
+            transform.localScale = new Vector2(-1, 1);
+        } 
+        else if (targetVelocity.x > 0.1)
+        {
+            transform.localScale = new Vector2(1, 1);
+        }
+
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if(col.gameObject == NewPlayer.Instance.gameObject)
+        if(col.gameObject == NewPlayer.Instance.gameObject && NewPlayer.Instance.health > 0)
         {
             Debug.Log("yipes!");
             NewPlayer.Instance.health -= 1.0f;
