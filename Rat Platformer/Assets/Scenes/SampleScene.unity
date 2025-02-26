@@ -251,9 +251,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minGroundNormalY: 0.65
-  gravityModifier: 3
+  gravityModifier: 9.81
   maxSpeed: 10
-  jumpPower: 17
+  jumpPower: 30
   health: 0
   hearts:
   - {fileID: 1169469871}
