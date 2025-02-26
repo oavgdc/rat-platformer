@@ -16,8 +16,11 @@ public class Enemy : PhysicsObject
     [SerializeField] private float rayCastLength = 2.0f;
     
     //Enemy Health
-    private int health = 100;
-    private int maxHealth = 100;
+    [SerializeField] private int health = 3;
+    private int maxHealth = 3;
+
+    //Attack Box Reference
+    [SerializeField] private GameObject playerHitbox; 
 
 
     // Start is called before the first frame update
@@ -29,6 +32,13 @@ public class Enemy : PhysicsObject
     // Update is called once per frame
     void Update()
     {
+
+        //health check
+        if (health == 0)
+        {
+           Destroy(gameObject);
+        }
+
         targetVelocity = new Vector2(maxSpeed * direction, 0);
 
         //Check for Right Ledge
@@ -87,4 +97,15 @@ public class Enemy : PhysicsObject
             NewPlayer.Instance.UpdateUI();
         }
     }
+       
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.gameObject == playerHitbox.gameObject && health > 0)
+        {
+            health -= 1;
+            Debug.Log("YOU SON OF A !");
+        }
+
+    }
+
 }

@@ -28,6 +28,11 @@ public class NewPlayer : PhysicsObject
     public Sprite keySprite;
     public Sprite inventoryItemBlank;
 
+    //Attacking
+    [SerializeField] private GameObject attackBox;
+    [SerializeField] private float cooldown;
+    [SerializeField] private float attackTimer;
+
     //Singleton instantiation (so we don't have to write GameObject.GetComponent
     private static NewPlayer instance;
     public static NewPlayer Instance 
@@ -47,16 +52,16 @@ public class NewPlayer : PhysicsObject
         health = 3f;
         UpdateUI();
 
-        //Note: since coinsText UI element is only every gonna be used one time, we can just assign reference
-        //in unity inspector by dragging and dropping onto text field (in other words, below line is unnecessary)
-        //below line would be good for multiple objects referencing the same thing 
+        attackBox.SetActive(false);
 
-        //coinsText = GameObject.Find("Coins").GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        attackTimer -= Time.deltaTime;
+
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
 
         if (Input.GetButtonDown("Jump") && grounded)
@@ -74,6 +79,33 @@ public class NewPlayer : PhysicsObject
             transform.localScale = new Vector2(1, 1);
         }
 
+        //Attacking
+        if(Input.GetButtonDown("Fire1"))
+        {
+            if(attackTimer > 0)
+            {
+                attackBox.SetActive(false);
+                return;
+            }
+
+            attackTimer = cooldown;
+            attackBox.SetActive(true);
+            // StartCoroutine(WaitSomeTime(1.0f));
+            // attackBox.SetActive(false);
+        }
+
+        if(Input.GetButtonUp("Fire1"))
+        {
+            attackBox.SetActive(false);
+        }
+
+    }
+
+    public void Attack()
+    {
+        
+
+        attackTimer = cooldown;
     }
 
     //Update UI elements
@@ -100,8 +132,7 @@ public class NewPlayer : PhysicsObject
         
         }
 
-        //Update Inventory
-        
+        //Update Inventory 
 
     } 
 
@@ -117,6 +148,11 @@ public class NewPlayer : PhysicsObject
         inventory.Remove(inventoryItemName);
         inventoryItemImage.sprite = inventoryItemBlank;
 
+    }
+
+    IEnumerator WaitSomeTime(float timeToWait)
+    {
+        yield return new WaitForSeconds(timeToWait);
     }
 
 }
