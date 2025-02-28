@@ -7,6 +7,9 @@ using TMPro;
 public class NewPlayer : PhysicsObject
 {
 
+    //Animator
+    public Animator playerAnimator;
+
     //Movement
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float jumpPower = 10;
@@ -89,6 +92,7 @@ public class NewPlayer : PhysicsObject
             }
 
             attackTimer = cooldown;
+            playerAnimator.SetBool("isSwingingSword", true);
             attackBox.SetActive(true);
             // StartCoroutine(WaitSomeTime(1.0f));
             // attackBox.SetActive(false);
@@ -97,6 +101,7 @@ public class NewPlayer : PhysicsObject
         if(Input.GetButtonUp("Fire1"))
         {
             attackBox.SetActive(false);
+            playerAnimator.SetBool("isSwingingSword", false);
         }
 
     }
