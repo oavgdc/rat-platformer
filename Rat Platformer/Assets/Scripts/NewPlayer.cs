@@ -17,6 +17,7 @@ public class NewPlayer : PhysicsObject
     //Health
     public float health = 3f;
     public Image[] hearts;
+    public Vector3 respawnPosition;
     [SerializeField] public Sprite heartFull;
     [SerializeField] public Sprite heartHalf;
     [SerializeField] public Sprite heartEmpty;
@@ -67,6 +68,13 @@ public class NewPlayer : PhysicsObject
 
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
 
+        //Respawn
+        if(health == 0) 
+        {
+            Respawn();
+        }
+
+        //Jumping
         if (Input.GetButtonDown("Jump") && grounded)
         {
             velocity.y = jumpPower;
@@ -106,11 +114,11 @@ public class NewPlayer : PhysicsObject
 
     }
 
-    public void Attack()
+    public void Respawn()
     {
-        
-
-        attackTimer = cooldown;
+        health = 3f;
+        UpdateUI();
+        this.gameObject.transform.position = respawnPosition;
     }
 
     //Update UI elements
@@ -120,7 +128,7 @@ public class NewPlayer : PhysicsObject
         coinsText.text = coinsCollected.ToString() + " Coins";
 
         //Update Health
-        for (int i = 0; i < hearts.Length; i++) 
+        for (int i = 0; i < hearts.Length; i++)  
         {
             if (health >= i + 1)
             {

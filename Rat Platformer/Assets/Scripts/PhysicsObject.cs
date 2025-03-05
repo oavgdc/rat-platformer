@@ -108,7 +108,7 @@ public class PhysicsObject : MonoBehaviour {
     rb2d.position = rb2d.position + move.normalized * distance;
 
     // Debugging: Log groundNormal and grounded status
-    Debug.Log($"Ground Normal: {groundNormal}, Grounded: {grounded}");
+    //Debug.Log($"Ground Normal: {groundNormal}, Grounded: {grounded}");
 }
 
 }
