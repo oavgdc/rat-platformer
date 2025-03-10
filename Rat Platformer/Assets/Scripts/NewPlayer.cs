@@ -83,11 +83,11 @@ public class NewPlayer : PhysicsObject
         //Flip Player
         if(targetVelocity.x < -0.1)
         {
-            transform.localScale = new Vector2(-1, 1);
+            transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
         } 
         else if (targetVelocity.x > 0.1)
         {
-            transform.localScale = new Vector2(1, 1);
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }
 
         //Attacking
