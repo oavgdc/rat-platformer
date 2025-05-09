@@ -6,14 +6,14 @@ using TMPro;
 
 public class NewPlayer : PhysicsObject
 {
-
     //Animator
     public Animator playerAnimator;
 
     //Movement
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float jumpPower = 10;
-    
+    private Vector3 initialScale;
+
     //Health
     public float health = 3f;
     public Image[] hearts;
@@ -21,7 +21,7 @@ public class NewPlayer : PhysicsObject
     [SerializeField] public Sprite heartFull;
     [SerializeField] public Sprite heartHalf;
     [SerializeField] public Sprite heartEmpty;
-    
+
     //Coins
     public int coinsCollected = 0;
     public Text coinsText;
@@ -48,22 +48,21 @@ public class NewPlayer : PhysicsObject
         }
     }
 
-    //Inventory (Weapon)
-
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize initialScale in Start to ensure Instance is set
+        initialScale = transform.localScale;
+
         health = 3f;
         UpdateUI();
 
         attackBox.SetActive(false);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
         attackTimer -= Time.deltaTime;
 
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
@@ -83,11 +82,11 @@ public class NewPlayer : PhysicsObject
         //Flip Player
         if(targetVelocity.x < -0.1)
         {
-            transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-1 * initialScale.x, initialScale.y, initialScale.z);
         } 
         else if (targetVelocity.x > 0.1)
         {
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(initialScale.x, initialScale.y, initialScale.z);
         }
 
         //Attacking
@@ -102,8 +101,6 @@ public class NewPlayer : PhysicsObject
             attackTimer = cooldown;
             playerAnimator.SetBool("isSwingingSword", true);
             attackBox.SetActive(true);
-            // StartCoroutine(WaitSomeTime(1.0f));
-            // attackBox.SetActive(false);
         }
 
         if(Input.GetButtonUp("Fire1"))
@@ -111,7 +108,6 @@ public class NewPlayer : PhysicsObject
             attackBox.SetActive(false);
             playerAnimator.SetBool("isSwingingSword", false);
         }
-
     }
 
     public void Respawn()
@@ -142,30 +138,23 @@ public class NewPlayer : PhysicsObject
             {
                 hearts[i].sprite = heartEmpty;
             }
-        
         }
-
-        //Update Inventory 
-
     } 
 
     public void AddInventoryItem(string inventoryItemName, Sprite image)
     {
         inventory.Add(inventoryItemName, image);
         inventoryItemImage.sprite = inventory[inventoryItemName];
-
     }
 
     public void RemoveInventoryItem(string inventoryItemName)
     {
         inventory.Remove(inventoryItemName);
         inventoryItemImage.sprite = inventoryItemBlank;
-
     }
 
     IEnumerator WaitSomeTime(float timeToWait)
     {
         yield return new WaitForSeconds(timeToWait);
     }
-
 }

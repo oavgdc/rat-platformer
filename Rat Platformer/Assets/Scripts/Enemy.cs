@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : PhysicsObject
 {
-    
     [SerializeField] private float maxSpeed;
-    private int direction = 1;
+    private int direction; // Removed [SerializeField] since it's set automatically
     private RaycastHit2D rightLedgeRaycastHit;
     private RaycastHit2D leftLedgeRaycastHit;
     private RaycastHit2D rightWallRaycastHit;
     private RaycastHit2D leftWallRaycastHit;
     [SerializeField] private LayerMask rayCastLayerMask;
     [SerializeField] private Vector2 rayCastOffset;
-    [SerializeField] private float rayCastLength = 2.0f;
+    [SerializeField] private float rayCastLength = .6f;
+    private Vector3 initialScale;
     
     //Enemy Health
     [SerializeField] private int health = 3;
@@ -22,21 +23,17 @@ public class Enemy : PhysicsObject
     //Attack Box Reference
     [SerializeField] private GameObject playerHitbox; 
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        
+        initialScale = transform.localScale;
+        direction = Mathf.RoundToInt(transform.localScale.x / Mathf.Abs(transform.localScale.x)); // Set initial direction
     }
 
-    // Update is called once per frame
     void Update()
     {
-
-        //health check
         if (health == 0)
         {
-           Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         targetVelocity = new Vector2(maxSpeed * direction, 0);
@@ -47,7 +44,6 @@ public class Enemy : PhysicsObject
         if(rightLedgeRaycastHit.collider == null)
         {
             direction = -1;
-            
         } 
 
         //Check for Left Ledge
@@ -74,18 +70,8 @@ public class Enemy : PhysicsObject
             direction = 1;
         } 
 
-        //flip for facing directions
-        
-
-        if(targetVelocity.x < -0.1)
-        {
-            transform.localScale = new Vector2(-1, 1);
-        } 
-        else if (targetVelocity.x > 0.1)
-        {
-            transform.localScale = new Vector2(1, 1);
-        }
-
+        //Flip sprite based on direction
+        transform.localScale = new Vector2(direction * initialScale.x, initialScale.y);
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -105,7 +91,5 @@ public class Enemy : PhysicsObject
             health -= 1;
             Debug.Log("YOU SON OF A !");
         }
-
     }
-
 }
