@@ -33,7 +33,9 @@ public class NewPlayer : PhysicsObject
     public Sprite inventoryItemBlank;
 
     //Attacking
-    [SerializeField] private GameObject attackBox;
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayers;
     [SerializeField] private float cooldown;
     [SerializeField] private float attackTimer;
 
@@ -57,7 +59,7 @@ public class NewPlayer : PhysicsObject
         health = 3f;
         UpdateUI();
 
-        attackBox.SetActive(false);
+        //attackBox.SetActive(false);
     }
 
     // Update is called once per frame
@@ -65,7 +67,16 @@ public class NewPlayer : PhysicsObject
     {
         attackTimer -= Time.deltaTime;
 
+        //Movement
+
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
+        if(Mathf.Abs(targetVelocity.x) > 0.5)
+        {
+            playerAnimator.SetBool("isSwordWalking", true); 
+        } else 
+        {
+            playerAnimator.SetBool("isSwordWalking", false); 
+        }
 
         //Respawn
         if(health == 0) 
@@ -94,20 +105,29 @@ public class NewPlayer : PhysicsObject
         {
             if(attackTimer > 0)
             {
-                attackBox.SetActive(false);
                 return;
             }
 
             attackTimer = cooldown;
-            playerAnimator.SetBool("isSwingingSword", true);
-            attackBox.SetActive(true);
+            playerAnimator.SetTrigger("SwordAttack");
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+            
+            foreach(Collider2D enemy in hitEnemies)
+            {
+                Debug.Log("We hit" + enemy.name);
+            }
         }
 
-        if(Input.GetButtonUp("Fire1"))
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
         {
-            attackBox.SetActive(false);
-            playerAnimator.SetBool("isSwingingSword", false);
+            return;
         }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+
     }
 
     public void Respawn()

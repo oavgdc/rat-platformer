@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckpointScript : MonoBehaviour
+public class Checkpoint : MonoBehaviour
 {
 
     // public GameObject trigger;
     // public GameObject player;
+    public Animator checkpointAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class CheckpointScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         Debug.Log("player is entering!");
+        checkpointAnimator.SetBool("isEnabled", true);
 
         if (collider.name == "Player") 
         {
