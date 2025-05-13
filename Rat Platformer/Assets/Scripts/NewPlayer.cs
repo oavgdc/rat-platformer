@@ -14,6 +14,9 @@ public class NewPlayer : PhysicsObject
     [SerializeField] private float jumpPower = 10;
     private Vector3 initialScale;
 
+    //Audio
+    public AudioSource footstepAudioSource;
+
     //Health
     public float health = 3f;
     public Image[] hearts;
@@ -99,6 +102,16 @@ public class NewPlayer : PhysicsObject
         else if (targetVelocity.x > 0.1)
         {
             transform.localScale = new Vector3(initialScale.x, initialScale.y, initialScale.z);
+        }
+        
+        //Footstep Sounds
+        if((Mathf.Abs(targetVelocity.x) > 0.1) /* && grounded */)
+        {
+            footstepAudioSource.enabled = true;
+            footstepAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
+        } else
+        {
+            footstepAudioSource.enabled = false;
         }
 
         //Attacking
