@@ -17,7 +17,7 @@ public class Enemy : PhysicsObject
     private Vector3 initialScale;
     
     //Enemy Health
-    [SerializeField] private int health = 3;
+    public int health = 3;
     private int maxHealth = 3;
 
     //Attack Box Reference
@@ -31,10 +31,6 @@ public class Enemy : PhysicsObject
 
     void Update()
     {
-        if (health == 0)
-        {
-            Destroy(gameObject);
-        }
 
         targetVelocity = new Vector2(maxSpeed * direction, 0);
 
@@ -91,5 +87,24 @@ public class Enemy : PhysicsObject
             health -= 1;
             Debug.Log("YOU SON OF A !");
         }
+    }
+
+    public void TakeDamage(int damage) 
+    {
+        health -= damage;
+
+        if (health == 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("enemy died");
+        //Die animation
+
+        //Destroy 
+        Destroy(gameObject);
     }
 }

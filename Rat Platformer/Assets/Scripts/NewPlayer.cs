@@ -36,6 +36,7 @@ public class NewPlayer : PhysicsObject
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
+    public int attackDamage = 1;
     [SerializeField] private float cooldown;
     [SerializeField] private float attackTimer;
 
@@ -115,6 +116,7 @@ public class NewPlayer : PhysicsObject
             foreach(Collider2D enemy in hitEnemies)
             {
                 Debug.Log("We hit" + enemy.name);
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
             }
         }
 
