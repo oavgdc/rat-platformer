@@ -17,6 +17,8 @@ public class NewPlayer : PhysicsObject
 
     //Audio
     public AudioSource footstepAudioSource;
+    public AudioSource playerAudioSource;
+    public AudioClip[] audioClips;
 
     //Health
     public float health = 3f;
@@ -134,6 +136,19 @@ public class NewPlayer : PhysicsObject
             }
         }
 
+    }
+
+    //audio clips
+    public void PlaySound(int soundKey) 
+    {
+        
+        if (playerAudioSource != null) 
+        {
+            playerAudioSource.PlayOneShot(audioClips[soundKey]);
+        } else 
+        {
+            Debug.LogWarning("Sound not found: " + soundKey);
+        }
     }
 
     void OnDrawGizmosSelected()
