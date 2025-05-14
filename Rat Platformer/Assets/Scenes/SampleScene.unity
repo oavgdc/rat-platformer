@@ -255,6 +255,7 @@ MonoBehaviour:
   minGroundNormalY: 0.65
   gravityModifier: 5
   playerAnimator: {fileID: 9135175}
+  playerSprite: {fileID: 9135171}
   maxSpeed: 5
   jumpPower: 13.32
   footstepAudioSource: {fileID: 9135176}
@@ -1343,7 +1344,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40.26964, y: 11.921924, z: -10}
+  m_LocalPosition: {x: -40.274017, y: 11.921924, z: -10}
   m_LocalScale: {x: 1.3634, y: 1.3634, z: 1.3634}
   m_ConstrainProportionsScale: 0
   m_Children: []

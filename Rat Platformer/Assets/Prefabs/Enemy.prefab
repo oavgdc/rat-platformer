@@ -169,5 +169,6 @@ MonoBehaviour:
     m_Bits: 55
   rayCastOffset: {x: 0.5, y: 0}
   rayCastLength: 1
+  sprite: {fileID: 4952825667950152599}
   health: 3
   playerHitbox: {fileID: 0}

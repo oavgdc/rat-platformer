@@ -6,8 +6,9 @@ using TMPro;
 
 public class NewPlayer : PhysicsObject
 {
-    //Animator
+    //Visual (Animation & Sprite)
     public Animator playerAnimator;
+    public SpriteRenderer playerSprite;
 
     //Movement
     [SerializeField] private float maxSpeed = 1;

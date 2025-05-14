@@ -15,7 +15,10 @@ public class Enemy : PhysicsObject
     [SerializeField] private Vector2 rayCastOffset;
     [SerializeField] private float rayCastLength = .6f;
     private Vector3 initialScale;
-    
+
+    //Enemy Sprite
+    public SpriteRenderer sprite;
+
     //Enemy Health
     public int health = 3;
     private int maxHealth = 3;
@@ -76,6 +79,7 @@ public class Enemy : PhysicsObject
         {
             Debug.Log("yipes!");
             NewPlayer.Instance.health -= 1.0f;
+            StartCoroutine(FlashRed(NewPlayer.Instance.playerSprite));
             NewPlayer.Instance.UpdateUI();
         }
     }
@@ -93,10 +97,19 @@ public class Enemy : PhysicsObject
     {
         health -= damage;
 
+        StartCoroutine(FlashRed(sprite));
+
         if (health == 0)
         {
             Die();
         }
+    }
+
+    public IEnumerator FlashRed(SpriteRenderer subject)
+    {
+        subject.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        subject.color = Color.white;
     }
 
     void Die()
