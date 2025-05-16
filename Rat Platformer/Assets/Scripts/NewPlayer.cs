@@ -126,12 +126,14 @@ public class NewPlayer : PhysicsObject
             }
 
             attackTimer = cooldown;
+            PlaySound(1);
             playerAnimator.SetTrigger("SwordAttack");
+
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-            
             foreach(Collider2D enemy in hitEnemies)
             {
                 Debug.Log("We hit" + enemy.name);
+                PlaySound(0);
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
             }
         }
@@ -145,6 +147,7 @@ public class NewPlayer : PhysicsObject
         if (playerAudioSource != null) 
         {
             playerAudioSource.PlayOneShot(audioClips[soundKey]);
+            playerAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
         } else 
         {
             Debug.LogWarning("Sound not found: " + soundKey);
