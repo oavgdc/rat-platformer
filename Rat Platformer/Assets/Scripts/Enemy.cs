@@ -29,7 +29,7 @@ public class Enemy : PhysicsObject
     void Start()
     {
         initialScale = transform.localScale;
-        direction = Mathf.RoundToInt(transform.localScale.x / Mathf.Abs(transform.localScale.x)); // Set initial direction
+        //direction = Mathf.RoundToInt(transform.localScale.x / Mathf.Abs(transform.localScale.x)); // Set initial direction
     }
 
     void Update()
@@ -37,37 +37,25 @@ public class Enemy : PhysicsObject
 
         targetVelocity = new Vector2(maxSpeed * direction, 0);
 
-        //Check for Right Ledge
+        //Check for right ledge!
         rightLedgeRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down, rayCastLength);
         Debug.DrawRay(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down * rayCastLength, Color.blue);
-        if(rightLedgeRaycastHit.collider == null)
-        {
-            direction = -1;
-        } 
+        if (rightLedgeRaycastHit.collider == null) direction = -1;
 
-        //Check for Left Ledge
+        //Check for left ledge!
         leftLedgeRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down, rayCastLength);
-        Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down * rayCastLength, Color.red);
-        if(leftLedgeRaycastHit.collider == null)
-        {
-            direction = 1;
-        } 
+        Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down * rayCastLength, Color.green);
+        if (leftLedgeRaycastHit.collider == null) direction = -1;
 
-        //Check for Right Wall
-        rightWallRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, rayCastLength, rayCastLayerMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * rayCastLength, Color.yellow);
-        if(rightWallRaycastHit.collider != null)
-        {
-            direction = -1;
-        } 
+        //Check for right wall!
+        rightWallRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, rayCastLength, rayCastLayerMask);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right * rayCastLength, Color.red);
+        if (rightWallRaycastHit.collider != null) direction = -1;
 
-        //Check for Left Wall
-        leftWallRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, rayCastLength, rayCastLayerMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * rayCastLength, Color.magenta);
-        if(leftWallRaycastHit.collider != null)
-        {
-            direction = 1;
-        } 
+        //Check for left wall!
+        leftWallRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y +rayCastOffset.y), Vector2.left, rayCastLength, rayCastLayerMask);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left * rayCastLength, Color.magenta);
+        if (leftWallRaycastHit.collider != null) direction = 1;
 
         //Flip sprite based on direction
         transform.localScale = new Vector2(direction * initialScale.x, initialScale.y);

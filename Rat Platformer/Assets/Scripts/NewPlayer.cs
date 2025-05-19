@@ -13,6 +13,8 @@ public class NewPlayer : PhysicsObject
     //Movement
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float jumpPower = 10;
+    [SerializeField] private float fallForgiveness = 0.1f; 
+    [SerializeField] private float fallForgivenessCounter; 
     private Vector3 initialScale;
 
     //Audio
@@ -75,7 +77,6 @@ public class NewPlayer : PhysicsObject
         attackTimer -= Time.deltaTime;
 
         //Movement
-
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
         if(Mathf.Abs(targetVelocity.x) > 0.5)
         {
@@ -92,9 +93,19 @@ public class NewPlayer : PhysicsObject
         }
 
         //Jumping
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (!grounded)
+        {
+            fallForgivenessCounter += Time.deltaTime;
+        }
+        else
+        {
+            fallForgivenessCounter = 0;
+        }
+        if (Input.GetButtonDown("Jump") && fallForgivenessCounter < fallForgiveness)
         {
             velocity.y = jumpPower;
+            grounded = false;
+            fallForgivenessCounter = fallForgiveness;
         }
 
         //Flip Player
