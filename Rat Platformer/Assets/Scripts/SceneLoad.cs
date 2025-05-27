@@ -23,10 +23,16 @@ public class SceneLoad : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(collider.tag == "Player" && !collider.isTrigger)
+        if(collider.tag == "Player" /*&& !collider.isTrigger*/)
         {
+            Debug.Log("Player is touching trigger!");
             StartCoroutine(LoadLevel());
         }
+    }
+
+    public void LoadGame()
+    {
+        StartCoroutine(LoadLevel());
     }
 
     public IEnumerator LoadLevel()

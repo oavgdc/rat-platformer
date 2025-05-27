@@ -119,7 +119,7 @@ public class NewPlayer : PhysicsObject
         }
         
         //Footstep Sounds
-        if((Mathf.Abs(targetVelocity.x) > 0.1) /* && grounded */)
+        if((Mathf.Abs(targetVelocity.x) > 0.1) && grounded)
         {
             footstepAudioSource.enabled = true;
             footstepAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
