@@ -13,8 +13,8 @@ public class NewPlayer : PhysicsObject
     //Movement
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float jumpPower = 10;
-    [SerializeField] private float fallForgiveness = 0.1f; 
-    [SerializeField] private float fallForgivenessCounter; 
+    [SerializeField] private float fallForgiveness = 0.1f;
+    [SerializeField] private float fallForgivenessCounter;
     private Vector3 initialScale;
 
     //Audio
@@ -44,17 +44,20 @@ public class NewPlayer : PhysicsObject
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
-    public int attackDamage = 1;
+    public int attackDamage = 1; //How much damage player does
+    private float attackAreaDisplayTimer = 0f;
+    [SerializeField] private float attackAreaDisplayDuration = 0.5f; //How long the sphere should be visible
     [SerializeField] private float cooldown;
     [SerializeField] private float attackTimer;
+    private List<Collider2D> enemiesHitThisAttack;
 
     //Singleton instantiation (so we don't have to write GameObject.GetComponent
     private static NewPlayer instance;
-    public static NewPlayer Instance 
-    { 
+    public static NewPlayer Instance
+    {
         get
         {
-            if(instance == null) instance = GameObject.FindObjectOfType<NewPlayer>();
+            if (instance == null) instance = GameObject.FindObjectOfType<NewPlayer>();
             return instance;
         }
     }
@@ -68,7 +71,7 @@ public class NewPlayer : PhysicsObject
         health = 3f;
         UpdateUI();
 
-        //attackBox.SetActive(false);
+        enemiesHitThisAttack = new List<Collider2D>();
     }
 
     // Update is called once per frame
@@ -76,18 +79,25 @@ public class NewPlayer : PhysicsObject
     {
         attackTimer -= Time.deltaTime;
 
+        // --- MODIFIED --- This block was added to count down the display timer.
+        if (attackAreaDisplayTimer > 0)
+        {
+            attackAreaDisplayTimer -= Time.deltaTime;
+        }
+
         //Movement
         targetVelocity = new Vector2(Input.GetAxis("Horizontal") * maxSpeed, 0);
-        if(Mathf.Abs(targetVelocity.x) > 0.5)
+        if (Mathf.Abs(targetVelocity.x) > 0.5)
         {
-            playerAnimator.SetBool("isSwordWalking", true); 
-        } else 
+            playerAnimator.SetBool("isSwordWalking", true);
+        }
+        else
         {
-            playerAnimator.SetBool("isSwordWalking", false); 
+            playerAnimator.SetBool("isSwordWalking", false);
         }
 
         //Respawn
-        if(health == 0) 
+        if (health == 0)
         {
             Respawn();
         }
@@ -109,87 +119,69 @@ public class NewPlayer : PhysicsObject
         }
 
         //Flip Player
-        if(targetVelocity.x < -0.1)
+        if (targetVelocity.x < -0.1)
         {
             transform.localScale = new Vector3(-1 * initialScale.x, initialScale.y, initialScale.z);
-        } 
+        }
         else if (targetVelocity.x > 0.1)
         {
             transform.localScale = new Vector3(initialScale.x, initialScale.y, initialScale.z);
         }
-        
+
         //Footstep Sounds
-        if((Mathf.Abs(targetVelocity.x) > 0.1) && grounded)
+        if ((Mathf.Abs(targetVelocity.x) > 0.1) && grounded)
         {
             footstepAudioSource.enabled = true;
             footstepAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
-        } else
+        }
+        else
         {
             footstepAudioSource.enabled = false;
         }
 
         //Attacking
-        if(Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && attackTimer <= 0)
         {
-            if(attackTimer > 0)
-            {
-                return;
-            }
-
             attackTimer = cooldown;
-            PlaySound(1);
-            playerAnimator.SetTrigger("SwordAttack");
+            attackAreaDisplayTimer = attackAreaDisplayDuration; //Timer starts 
+
+            enemiesHitThisAttack.Clear(); //Clears list of enemiesHit for the new swing
+
+            PlaySound(1); //Play sword swing sound effect
+            
+            playerAnimator.SetTrigger("SwordAttack"); //Set trigger in playerAnimator
+
+            
+        }
+
+        if (attackAreaDisplayTimer > 0)
+        {
+            attackAreaDisplayTimer -= Time.deltaTime;
 
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-            foreach(Collider2D enemy in hitEnemies)
+            foreach (Collider2D enemy in hitEnemies)
             {
-                Debug.Log("We hit" + enemy.name);
-                PlaySound(0);
-                enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                if(!enemiesHitThisAttack.Contains(enemy))
+                {
+                    Debug.Log("We hit" + enemy.name);
+                    PlaySound(0);
+                    enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+
+                    enemiesHitThisAttack.Add(enemy);
+                }
+                
             }
         }
-
-    }
-
-    //audio clips
-    public void PlaySound(int soundKey) 
-    {
-        
-        if (playerAudioSource != null) 
-        {
-            playerAudioSource.PlayOneShot(audioClips[soundKey]);
-            playerAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
-        } else 
-        {
-            Debug.LogWarning("Sound not found: " + soundKey);
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-        {
-            return;
-        }
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-
-    }
-
-    public void Respawn()
-    {
-        health = 3f;
-        UpdateUI();
-        this.gameObject.transform.position = respawnPosition;
     }
 
     //Update UI elements
-    public void UpdateUI() 
+    public void UpdateUI()
     {
         //Update Coins
         coinsText.text = coinsCollected.ToString() + " Coins";
 
         //Update Health
-        for (int i = 0; i < hearts.Length; i++)  
+        for (int i = 0; i < hearts.Length; i++)
         {
             if (health >= i + 1)
             {
@@ -204,8 +196,62 @@ public class NewPlayer : PhysicsObject
                 hearts[i].sprite = heartEmpty;
             }
         }
-    } 
+    }
 
+    //audio clips
+    public void PlaySound(int soundKey)
+    {
+
+        if (playerAudioSource != null)
+        {
+            playerAudioSource.PlayOneShot(audioClips[soundKey]);
+            playerAudioSource.pitch = UnityEngine.Random.Range(1.0f, 1.5f);
+        }
+        else
+        {
+            Debug.LogWarning("Sound not found: " + soundKey);
+        }
+    }
+
+    // --- MODIFIED --- This entire function was changed.
+    // It is now OnDrawGizmos() and checks the timer before drawing.
+    void OnDrawGizmos()
+    {
+        if (attackPoint == null)
+        {
+            return;
+        }
+
+        // Only draw the wire sphere if the timer is greater than 0
+        if(attackAreaDisplayTimer > 0)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        }
+    }
+
+    //Respawning
+    public void Respawn()
+    {
+        health = 3f;
+        UpdateUI();
+        this.gameObject.transform.position = respawnPosition;
+    }
+
+    //Player Take Damage: When Player collides with Enemy, decrease Player health by 1 
+    //Also make Player sprite flash red
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Enemy") && health > 0)
+        {
+            Debug.Log("I got hit by an enemy!");
+            health -= 1.0f;
+            StartCoroutine(FlashRed(playerSprite));
+            UpdateUI();
+        }
+    }
+
+    //Inventory
     public void AddInventoryItem(string inventoryItemName, Sprite image)
     {
         inventory.Add(inventoryItemName, image);
@@ -218,8 +264,17 @@ public class NewPlayer : PhysicsObject
         inventoryItemImage.sprite = inventoryItemBlank;
     }
 
+    //Wait timeToWait seconds
     IEnumerator WaitSomeTime(float timeToWait)
     {
         yield return new WaitForSeconds(timeToWait);
+    }
+
+    //Flash Red
+    public IEnumerator FlashRed(SpriteRenderer subject)
+    {
+        subject.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        subject.color = Color.white;
     }
 }

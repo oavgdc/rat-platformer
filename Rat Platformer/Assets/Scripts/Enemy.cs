@@ -7,17 +7,21 @@ public class Enemy : PhysicsObject
 {
     [SerializeField] private float maxSpeed;
     private int direction; // Removed [SerializeField] since it's set automatically
+
+    //Ledge Detection 
     private RaycastHit2D rightLedgeRaycastHit;
     private RaycastHit2D leftLedgeRaycastHit;
     private RaycastHit2D rightWallRaycastHit;
     private RaycastHit2D leftWallRaycastHit;
-    [SerializeField] private LayerMask rayCastLayerMask;
+    [SerializeField] private LayerMask rayCastLayerMask; //The objects of whatever layers are selected for the layermask are the that Enemies will detect and bounce off of
     [SerializeField] private Vector2 rayCastOffset;
     [SerializeField] private float rayCastLength = .6f;
     private Vector3 initialScale;
 
     //Enemy Sprite
     public SpriteRenderer sprite;
+    public float halfHeight;
+    public float halfWidth;
 
     //Enemy Health
     public int health = 3;
@@ -29,6 +33,8 @@ public class Enemy : PhysicsObject
     void Start()
     {
         initialScale = transform.localScale;
+        halfWidth = sprite.bounds.extents.x;
+        halfHeight = sprite.bounds.extents.y;
         //direction = Mathf.RoundToInt(transform.localScale.x / Mathf.Abs(transform.localScale.x)); // Set initial direction
     }
 
@@ -45,7 +51,7 @@ public class Enemy : PhysicsObject
         //Check for left ledge!
         leftLedgeRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down, rayCastLength);
         Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y + rayCastOffset.y), Vector2.down * rayCastLength, Color.green);
-        if (leftLedgeRaycastHit.collider == null) direction = -1;
+        if (leftLedgeRaycastHit.collider == null) direction = 1;
 
         //Check for right wall!
         rightWallRaycastHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, rayCastLength, rayCastLayerMask);
@@ -61,15 +67,9 @@ public class Enemy : PhysicsObject
         transform.localScale = new Vector2(direction * initialScale.x, initialScale.y);
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    private void SetDirection()
     {
-        if(col.gameObject == NewPlayer.Instance.gameObject && NewPlayer.Instance.health > 0)
-        {
-            Debug.Log("yipes!");
-            NewPlayer.Instance.health -= 1.0f;
-            StartCoroutine(FlashRed(NewPlayer.Instance.playerSprite));
-            NewPlayer.Instance.UpdateUI();
-        }
+
     }
        
     void OnTriggerEnter2D(Collider2D col)
@@ -81,11 +81,13 @@ public class Enemy : PhysicsObject
         }
     }
 
+    //Decreases health of Enemy by damage value passed in
+    //Makes Enemy flash red as well
     public void TakeDamage(int damage) 
     {
         health -= damage;
 
-        StartCoroutine(FlashRed(sprite));
+        StartCoroutine(FlashRed(sprite)); 
 
         if (health == 0)
         {
