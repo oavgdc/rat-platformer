@@ -20,21 +20,14 @@ public class Enemy : PhysicsObject
 
     //Enemy Sprite
     public SpriteRenderer sprite;
-    public float halfHeight;
-    public float halfWidth;
 
     //Enemy Health
     public int health = 3;
     private int maxHealth = 3;
 
-    //Attack Box Reference
-    [SerializeField] private GameObject playerHitbox; 
-
     void Start()
     {
         initialScale = transform.localScale;
-        halfWidth = sprite.bounds.extents.x;
-        halfHeight = sprite.bounds.extents.y;
         //direction = Mathf.RoundToInt(transform.localScale.x / Mathf.Abs(transform.localScale.x)); // Set initial direction
     }
 
@@ -67,19 +60,6 @@ public class Enemy : PhysicsObject
         transform.localScale = new Vector2(direction * initialScale.x, initialScale.y);
     }
 
-    private void SetDirection()
-    {
-
-    }
-       
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if(col.gameObject == playerHitbox.gameObject && health > 0)
-        {
-            health -= 1;
-            Debug.Log("YOU SON OF A !");
-        }
-    }
 
     //Decreases health of Enemy by damage value passed in
     //Makes Enemy flash red as well
